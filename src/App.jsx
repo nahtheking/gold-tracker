@@ -89,7 +89,7 @@ export default function App() {
         margin: '0 auto',
         padding: isMobile ? '16px' : '32px 24px'
       }}>
-        {view === 'dashboard' && <Dashboard summary={summary} />}
+        {view === 'dashboard' && <Dashboard summary={summary} transactions={transactions} />}
 
         {view === 'transactions' && (
           <TransactionList

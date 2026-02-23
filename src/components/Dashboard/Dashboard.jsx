@@ -2,8 +2,9 @@ import React from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency } from '../../utils/calculations';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { GoldChart } from './GoldChart';
 
-export const Dashboard = ({ summary }) => {
+export const Dashboard = ({ summary, transactions }) => {
   const isMobile = useIsMobile();
   return (
     <div>
@@ -60,6 +61,11 @@ export const Dashboard = ({ summary }) => {
             {summary.profitLoss >= 0 ? '+' : ''}{summary.profitLossPercent.toFixed(2)}%
           </div>
         </div>
+      </div>
+
+      {/* Gold Chart */}
+      <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
+        <GoldChart transactions={transactions} />
       </div>
 
       {/* Holdings */}
