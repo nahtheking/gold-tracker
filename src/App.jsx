@@ -27,10 +27,13 @@ export default function App() {
 
   // Hooks
   const { user, loading, signUp, signIn, signOut } = useAuth();
-  const { transactions, addTransaction, deleteTransaction } = useTransactions(user);
-  const { stores, goldTypes, storePrices, updatePrice } = useStorePrices();
+  const { transactions, loading: transactionsLoading, addTransaction, deleteTransaction } = useTransactions(user);
+  const { stores, goldTypes, storePrices, loading: pricesLoading, updatePrice } = useStorePrices();
   const toast = useToast();
   const isMobile = useIsMobile();
+
+  // Combined loading state for navigation
+  const dataLoading = transactionsLoading || pricesLoading;
 
   // Loading state
   if (loading) {
@@ -82,7 +85,7 @@ export default function App() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     }}>
       <Header user={user} onLogout={signOut} />
-      <Navigation currentView={view} onViewChange={setView} />
+      <Navigation currentView={view} onViewChange={setView} loading={dataLoading} />
 
       <div style={{
         maxWidth: '1200px',

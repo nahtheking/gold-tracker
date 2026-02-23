@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors } from '../../constants/colors';
 
-export const Navigation = ({ currentView, onViewChange }) => {
+export const Navigation = ({ currentView, onViewChange, loading = false }) => {
   const tabs = [
     { id: 'dashboard', label: '📊 Tổng quan' },
     { id: 'transactions', label: '📝 Giao dịch' },
@@ -26,7 +26,8 @@ export const Navigation = ({ currentView, onViewChange }) => {
         {tabs.map(tab => (
           <button
             key={tab.id}
-            onClick={() => onViewChange(tab.id)}
+            onClick={() => !loading && onViewChange(tab.id)}
+            disabled={loading}
             style={{
               padding: '16px 24px',
               background: 'none',
@@ -34,11 +35,14 @@ export const Navigation = ({ currentView, onViewChange }) => {
               borderBottom: currentView === tab.id
                 ? `3px solid ${colors.primary}`
                 : '3px solid transparent',
-              color: currentView === tab.id ? colors.primaryText : colors.gray500,
+              color: loading
+                ? colors.gray400
+                : currentView === tab.id ? colors.primaryText : colors.gray500,
               fontSize: '15px',
               fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s'
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s',
+              opacity: loading ? 0.5 : 1
             }}
           >
             {tab.label}
