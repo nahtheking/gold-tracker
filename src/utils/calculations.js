@@ -1,12 +1,17 @@
 export const calculateSummary = (transactions, storePrices) => {
   let totalBuyAmount = 0;
   let totalSellAmount = 0;
-  const holdings = {};
+  const holdings = {}; // Key: store_id + gold_type_id
 
   transactions.forEach(t => {
-    const key = t.gold_type_id;
+    // Create unique key combining store and gold type
+    const key = `${t.store_id || 'no-store'}_${t.gold_type_id}`;
+
     if (!holdings[key]) {
       holdings[key] = {
+        storeId: t.store_id,
+        storeName: t.stores?.name || 'Không rõ',
+        goldTypeId: t.gold_type_id,
         name: t.gold_types?.name || 'Unknown',
         unit: t.gold_types?.unit || 'chỉ',
         quantity: 0,
@@ -25,14 +30,35 @@ export const calculateSummary = (transactions, storePrices) => {
     }
   });
 
-  // Calculate current value based on latest store prices
+  // Calculate current value based on store-specific prices
   let totalCurrentValue = 0;
   Object.keys(holdings).forEach(key => {
-    if (holdings[key].quantity > 0) {
-      const latestPrice = storePrices.find(p => p.gold_type_id === key);
-      if (latestPrice) {
-        totalCurrentValue += holdings[key].quantity * latestPrice.sell_price;
+    const holding = holdings[key];
+    if (holding.quantity > 0) {
+      // Find price for this specific store + gold type combination
+      const price = storePrices.find(
+        p => p.store_id === holding.storeId && p.gold_type_id === holding.goldTypeId
+      );
+      if (price) {
+        totalCurrentValue += holding.quantity * price.sell_price;
       }
+    }
+  });
+
+  // Group holdings by gold type for display (sum quantities from different stores)
+  const holdingsByGoldType = {};
+  Object.values(holdings).forEach(h => {
+    if (h.quantity > 0) {
+      if (!holdingsByGoldType[h.goldTypeId]) {
+        holdingsByGoldType[h.goldTypeId] = {
+          name: h.name,
+          unit: h.unit,
+          quantity: 0,
+          investedAmount: 0
+        };
+      }
+      holdingsByGoldType[h.goldTypeId].quantity += h.quantity;
+      holdingsByGoldType[h.goldTypeId].investedAmount += h.investedAmount;
     }
   });
 
@@ -41,7 +67,7 @@ export const calculateSummary = (transactions, storePrices) => {
   const profitLossPercent = netInvestment > 0 ? (profitLoss / netInvestment) * 100 : 0;
 
   return {
-    holdings: Object.values(holdings).filter(h => h.quantity > 0),
+    holdings: Object.values(holdingsByGoldType),
     totalInvestment: netInvestment,
     currentValue: totalCurrentValue,
     profitLoss,
