@@ -5,31 +5,48 @@ A modern web application for tracking gold investments with real-time profit/los
 ## ✨ Features
 
 - 📊 **Dashboard**: View total investment, current value, and profit/loss
-- 📝 **Transaction Management**: Track buy/sell transactions
-- 💵 **Price Updates**: Update current gold prices from different stores
+- 📈 **Charts**: Interactive line chart showing gold quantity trends over time
+- 📝 **Transaction Management**: Track buy/sell transactions with smart defaults
+- 💵 **Price Updates**: Store-specific gold pricing from different shops
+- 📱 **PWA Support**: Install as app on iOS/Android home screen
+- 🎨 **Modern UI**: Gold-themed, responsive interface optimized for mobile
+- 🔔 **Toast Notifications**: User-friendly success/error messages
 - 👥 **Multi-user Support**: Share with family members
-- 🎨 **Modern UI**: Clean, responsive interface with gradient design
 
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 18 with Vite
+- **Charts**: Recharts for data visualization
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Supabase Auth
 - **Styling**: Inline CSS with modern design
+- **Testing**: Vitest + React Testing Library
 
 ## 📦 Project Structure
 
 ```
 gold-tracker/
-├── index.html              # HTML entry point
-├── package.json            # Dependencies
-├── vite.config.js          # Vite configuration
-├── supabase-schema.sql     # Database schema
-├── gold-tracker.jsx        # Main React component
+├── index.html                 # HTML entry point
+├── package.json               # Dependencies
+├── vite.config.js             # Vite configuration
+├── supabase-schema.sql        # Database schema
+├── public/                    # Static assets
+│   ├── manifest.json          # PWA manifest
+│   └── icon-*.png             # App icons
 ├── src/
-│   └── main.jsx           # React entry point
-├── HUONG-DAN.md           # Vietnamese setup guide
-└── README.md              # This file
+│   ├── main.jsx               # React entry point
+│   ├── App.jsx                # Main app component
+│   ├── components/            # UI components
+│   │   ├── Auth/              # Login/signup
+│   │   ├── common/            # Shared components
+│   │   ├── Dashboard/         # Dashboard & charts
+│   │   ├── Transactions/      # Transaction list/forms
+│   │   └── PriceList/         # Price management
+│   ├── hooks/                 # Custom React hooks
+│   ├── services/              # API services
+│   ├── utils/                 # Helper functions
+│   └── constants/             # App constants
+└── README.md                  # This file
 ```
 
 ## 🚀 Quick Start
@@ -43,11 +60,11 @@ gold-tracker/
 
 ### 2. Configure App
 
-Edit `gold-tracker.jsx` lines 6-7:
+Create `.env` file in project root:
 
-```javascript
-const supabaseUrl = 'YOUR_SUPABASE_URL';
-const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+```env
+VITE_SUPABASE_URL=YOUR_SUPABASE_URL
+VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
 ```
 
 ### 3. Install & Run
@@ -77,11 +94,12 @@ Visit `http://localhost:3000`
 
 ## 🎨 UI Design
 
-Modern gradient-based design with:
-- Purple/blue gradients for primary elements
+Modern gold-themed design with:
+- Gold gradients (#F5C842 → #E6B730) for primary elements
 - Clean card-based layouts
-- Responsive grid system
+- Mobile-first responsive design
 - Smooth transitions and hover effects
+- Vietnamese number formatting (18.110.000 ₫)
 
 ## 📱 Usage
 
@@ -142,11 +160,11 @@ Perfect for personal/family use!
 
 ## 🔮 Future Enhancements
 
+- [x] Charts and analytics ✅
+- [x] PWA/Mobile support ✅
 - [ ] Excel export
-- [ ] Charts and analytics
 - [ ] Price change notifications
 - [ ] Dark mode
-- [ ] Mobile app (React Native)
 - [ ] Automatic price fetching from gold websites
 
 ## 📝 License
