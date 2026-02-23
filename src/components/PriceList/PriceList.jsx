@@ -1,8 +1,11 @@
 import React from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency, formatDateTime } from '../../utils/calculations';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import { PriceCard } from './PriceCard';
 
 export const PriceList = ({ storePrices, onUpdateClick }) => {
+  const isMobile = useIsMobile();
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
@@ -27,19 +30,34 @@ export const PriceList = ({ storePrices, onUpdateClick }) => {
         </button>
       </div>
 
-      <div style={{
-        background: 'white',
-        borderRadius: '16px',
-        overflow: 'hidden',
-        boxShadow: colors.shadowDefault
-      }}>
-        {storePrices.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', color: colors.gray400 }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>💵</div>
-            <div style={{ fontSize: '18px', fontWeight: '600' }}>Chưa có giá vàng nào</div>
-            <div style={{ fontSize: '14px', marginTop: '8px' }}>Nhấn "Cập nhật giá" để thêm</div>
-          </div>
-        ) : (
+      {storePrices.length === 0 ? (
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '60px 20px',
+          textAlign: 'center',
+          color: colors.gray400,
+          boxShadow: colors.shadowDefault
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>💵</div>
+          <div style={{ fontSize: '18px', fontWeight: '600' }}>Chưa có giá vàng nào</div>
+          <div style={{ fontSize: '14px', marginTop: '8px' }}>Nhấn "Cập nhật giá" để thêm</div>
+        </div>
+      ) : isMobile ? (
+        // Mobile: Card Layout
+        <div>
+          {storePrices.map((p) => (
+            <PriceCard key={p.id} price={p} />
+          ))}
+        </div>
+      ) : (
+        // Desktop: Table Layout
+        <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: colors.shadowDefault
+        }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
@@ -74,8 +92,8 @@ export const PriceList = ({ storePrices, onUpdateClick }) => {
               </tbody>
             </table>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

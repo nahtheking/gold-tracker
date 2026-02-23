@@ -11,14 +11,46 @@ export const TransactionCard = ({ transaction, onDelete }) => {
       borderRadius: '12px',
       padding: '16px',
       boxShadow: colors.shadowDefault,
-      marginBottom: '12px'
+      marginBottom: '12px',
+      position: 'relative'
     }}>
+      {/* Delete button - overlapping edge */}
+      <button
+        onClick={() => onDelete(t.id)}
+        style={{
+          position: 'absolute',
+          top: '-10px',
+          right: '-10px',
+          width: '28px',
+          height: '28px',
+          borderRadius: '50%',
+          background: colors.error,
+          border: '2px solid white',
+          color: 'white',
+          fontSize: '18px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: '700',
+          lineHeight: '1',
+          boxShadow: colors.shadowDefault,
+          transition: 'all 0.2s',
+          zIndex: 10
+        }}
+        onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
+        onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+      >
+        ×
+      </button>
+
       {/* Header: Type + Date */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: '12px'
+        marginBottom: '12px',
+        paddingRight: '32px' // Space for delete button
       }}>
         <span style={{
           padding: '6px 12px',
@@ -92,25 +124,6 @@ export const TransactionCard = ({ transaction, onDelete }) => {
           </div>
         </div>
       </div>
-
-      {/* Delete Button */}
-      <button
-        onClick={() => onDelete(t.id)}
-        style={{
-          width: '100%',
-          padding: '10px',
-          background: colors.errorLight,
-          border: 'none',
-          borderRadius: '8px',
-          color: colors.errorTextDark,
-          fontSize: '14px',
-          fontWeight: '600',
-          cursor: 'pointer',
-          marginTop: '4px'
-        }}
-      >
-        🗑️ Xóa giao dịch
-      </button>
     </div>
   );
 };
