@@ -140,6 +140,18 @@ export const LoginForm = ({ onSignIn, onSignUp, toast }) => {
             {authMode === 'login' ? 'Chưa có tài khoản? Đăng ký' : 'Đã có tài khoản? Đăng nhập'}
           </button>
         </div>
+
+        {/* Signature */}
+        <div style={{
+          textAlign: 'center',
+          marginTop: '32px',
+          paddingTop: '24px',
+          borderTop: `1px solid ${colors.gray200}`,
+          fontSize: '13px',
+          color: colors.gray400
+        }}>
+          © 2025 nahtheking
+        </div>
       </div>
     </div>
   );
