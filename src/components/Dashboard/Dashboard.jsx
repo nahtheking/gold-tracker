@@ -1,11 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency } from '../../utils/calculations';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { GoldChart } from './GoldChart';
+import { GoldDistributionChart } from './GoldDistributionChart';
 
 export const Dashboard = ({ summary, transactions }) => {
   const isMobile = useIsMobile();
+
+  // Load hidden cards settings from localStorage
+  const [hiddenCards, setHiddenCards] = useState(() => {
+    try {
+      const saved = localStorage.getItem('goldTracker_hiddenCards');
+      return saved ? JSON.parse(saved) : {
+        investment: false,
+        currentValue: false,
+        profitLoss: false,
+        holdings: false
+      };
+    } catch {
+      return {
+        investment: false,
+        currentValue: false,
+        profitLoss: false,
+        holdings: false
+      };
+    }
+  });
+
+  // Save hidden cards settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('goldTracker_hiddenCards', JSON.stringify(hiddenCards));
+  }, [hiddenCards]);
+
+  const toggleVisibility = (card) => {
+    setHiddenCards(prev => ({
+      ...prev,
+      [card]: !prev[card]
+    }));
+  };
   return (
     <div>
       {/* Summary Cards */}
@@ -19,13 +52,33 @@ export const Dashboard = ({ summary, transactions }) => {
           background: 'white',
           borderRadius: '16px',
           padding: isMobile ? '16px' : '24px',
-          boxShadow: colors.shadowDefault
+          boxShadow: colors.shadowDefault,
+          position: 'relative'
         }}>
+          <button
+            onClick={() => toggleVisibility('investment')}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '16px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '20px',
+              padding: '4px',
+              opacity: 0.6,
+              transition: 'opacity 0.2s'
+            }}
+            onMouseOver={(e) => e.target.style.opacity = '1'}
+            onMouseOut={(e) => e.target.style.opacity = '0.6'}
+          >
+            {hiddenCards.investment ? '👁️‍🗨️' : '👁️'}
+          </button>
           <div style={{ fontSize: '14px', color: colors.gray500, fontWeight: '600', marginBottom: '8px' }}>
             TỔNG VỐN ĐẦU TƯ
           </div>
           <div style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '700', color: colors.gray700 }}>
-            {formatCurrency(summary.totalInvestment)}
+            {hiddenCards.investment ? '••••••••' : formatCurrency(summary.totalInvestment)}
           </div>
         </div>
 
@@ -33,13 +86,33 @@ export const Dashboard = ({ summary, transactions }) => {
           background: 'white',
           borderRadius: '16px',
           padding: isMobile ? '16px' : '24px',
-          boxShadow: colors.shadowDefault
+          boxShadow: colors.shadowDefault,
+          position: 'relative'
         }}>
+          <button
+            onClick={() => toggleVisibility('currentValue')}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '16px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '20px',
+              padding: '4px',
+              opacity: 0.6,
+              transition: 'opacity 0.2s'
+            }}
+            onMouseOver={(e) => e.target.style.opacity = '1'}
+            onMouseOut={(e) => e.target.style.opacity = '0.6'}
+          >
+            {hiddenCards.currentValue ? '👁️‍🗨️' : '👁️'}
+          </button>
           <div style={{ fontSize: '14px', color: colors.gray500, fontWeight: '600', marginBottom: '8px' }}>
             GIÁ TRỊ HIỆN TẠI
           </div>
           <div style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '700', color: colors.gray700 }}>
-            {formatCurrency(summary.currentValue)}
+            {hiddenCards.currentValue ? '••••••••' : formatCurrency(summary.currentValue)}
           </div>
         </div>
 
@@ -49,23 +122,39 @@ export const Dashboard = ({ summary, transactions }) => {
             : `linear-gradient(135deg, ${colors.error} 0%, ${colors.errorDark} 100%)`,
           borderRadius: '16px',
           padding: isMobile ? '16px' : '24px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          position: 'relative'
         }}>
+          <button
+            onClick={() => toggleVisibility('profitLoss')}
+            style={{
+              position: 'absolute',
+              top: '16px',
+              right: '16px',
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '20px',
+              padding: '4px',
+              opacity: 0.8,
+              transition: 'opacity 0.2s',
+              filter: 'brightness(2)'
+            }}
+            onMouseOver={(e) => e.target.style.opacity = '1'}
+            onMouseOut={(e) => e.target.style.opacity = '0.8'}
+          >
+            {hiddenCards.profitLoss ? '👁️‍🗨️' : '👁️'}
+          </button>
           <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', fontWeight: '600', marginBottom: '8px' }}>
             LÃI/LỖ
           </div>
           <div style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '700', color: 'white' }}>
-            {summary.profitLoss >= 0 ? '+' : ''}{formatCurrency(summary.profitLoss)}
+            {hiddenCards.profitLoss ? '••••••••' : `${summary.profitLoss >= 0 ? '+' : ''}${formatCurrency(summary.profitLoss)}`}
           </div>
           <div style={{ fontSize: '16px', color: 'rgba(255,255,255,0.9)', marginTop: '4px' }}>
-            {summary.profitLoss >= 0 ? '+' : ''}{summary.profitLossPercent.toFixed(2)}%
+            {hiddenCards.profitLoss ? '••••' : `${summary.profitLoss >= 0 ? '+' : ''}${summary.profitLossPercent.toFixed(2)}%`}
           </div>
         </div>
-      </div>
-
-      {/* Gold Chart */}
-      <div style={{ marginBottom: isMobile ? '20px' : '32px' }}>
-        <GoldChart transactions={transactions} />
       </div>
 
       {/* Holdings */}
@@ -73,11 +162,31 @@ export const Dashboard = ({ summary, transactions }) => {
         background: 'white',
         borderRadius: '16px',
         padding: isMobile ? '16px' : '24px',
-        boxShadow: colors.shadowDefault
+        boxShadow: colors.shadowDefault,
+        marginBottom: isMobile ? '20px' : '32px',
+        position: 'relative'
       }}>
-        <h2 style={{ fontSize: '20px', fontWeight: '700', color: colors.gray700, marginBottom: '20px' }}>
-          Tài sản vàng hiện có
-        </h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: '700', color: colors.gray700, margin: 0 }}>
+            Tài sản vàng hiện có
+          </h2>
+          <button
+            onClick={() => toggleVisibility('holdings')}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '20px',
+              padding: '4px',
+              opacity: 0.6,
+              transition: 'opacity 0.2s'
+            }}
+            onMouseOver={(e) => e.target.style.opacity = '1'}
+            onMouseOut={(e) => e.target.style.opacity = '0.6'}
+          >
+            {hiddenCards.holdings ? '👁️‍🗨️' : '👁️'}
+          </button>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {summary.holdings.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px', color: colors.gray400 }}>
@@ -98,18 +207,28 @@ export const Dashboard = ({ summary, transactions }) => {
                     {holding.name}
                   </div>
                   <div style={{ fontSize: '14px', color: colors.gray500, marginTop: '4px' }}>
-                    Vốn: {formatCurrency(holding.investedAmount)}
+                    Vốn: {hiddenCards.holdings ? '••••••••' : formatCurrency(holding.investedAmount)}
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: '20px', fontWeight: '700', color: colors.primaryText }}>
-                    {holding.quantity.toFixed(2)} {holding.unit}
+                    {hiddenCards.holdings ? '••••' : `${holding.quantity.toFixed(2)} ${holding.unit}`}
                   </div>
                 </div>
               </div>
             ))
           )}
         </div>
+      </div>
+
+      {/* Charts Section */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)',
+        gap: isMobile ? '20px' : '24px'
+      }}>
+        <GoldChart transactions={transactions} />
+        <GoldDistributionChart transactions={transactions} />
       </div>
     </div>
   );
