@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Gold Tracker Icons</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 { color: #333; margin-bottom: 20px; }
+    .instructions {
+      background: #fffbeb;
+      border: 1px solid #fbbf24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    canvas {
+      border: 2px solid #e5e5e5;
+      border-radius: 8px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .icons { display: flex; flex-wrap: wrap; gap: 20px; }
+    button {
+      background: linear-gradient(135deg, #F5C842 0%, #E6B730 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏆 Gold Tracker - Icon Generator</h1>
+
+    <div class="instructions">
+      <strong>Hướng dẫn:</strong><br>
+      1. Click vào từng icon để download<br>
+      2. Đặt các file vào thư mục <code>public/</code> của project<br>
+      3. Deploy lên Netlify<br>
+      4. Test bằng cách share và "Add to Home Screen" trên iPhone
+    </div>
+
+    <button onclick="generateAll()">🎨 Generate All Icons</button>
+
+    <div class="icons" id="icons"></div>
+  </div>
+
+  <script>
+    const sizes = [
+      { name: 'favicon-16.png', size: 16 },
+      { name: 'favicon-32.png', size: 32 },
+      { name: 'icon-152.png', size: 152 },
+      { name: 'icon-167.png', size: 167 },
+      { name: 'icon-180.png', size: 180 },
+      { name: 'icon-192.png', size: 192 },
+      { name: 'icon-512.png', size: 512 }
+    ];
+
+    function drawIcon(canvas, size) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = size;
+      canvas.height = size;
+
+      // Background gradient (gold)
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#F5C842');
+      gradient.addColorStop(1, '#E6B730');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      // Gold bar icon
+      ctx.fillStyle = '#D4A429';
+      const barWidth = size * 0.6;
+      const barHeight = size * 0.4;
+      const x = (size - barWidth) / 2;
+      const y = (size - barHeight) / 2;
+
+      // Main gold bar
+      ctx.fillRect(x, y, barWidth, barHeight);
+
+      // Shine effect
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.fillRect(x, y, barWidth, barHeight * 0.3);
+
+      // Letter "G"
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size * 0.5}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('G', size / 2, size / 2);
+    }
+
+    function downloadCanvas(canvas, filename) {
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function generateAll() {
+      const container = document.getElementById('icons');
+      container.innerHTML = '';
+
+      sizes.forEach(({ name, size }) => {
+        const wrapper = document.createElement('div');
+        wrapper.style.textAlign = 'center';
+
+        const canvas = document.createElement('canvas');
+        drawIcon(canvas, size);
+
+        const label = document.createElement('div');
+        label.textContent = `${name} (${size}x${size})`;
+        label.style.marginTop = '8px';
+        label.style.fontSize = '14px';
+        label.style.color = '#666';
+
+        canvas.onclick = () => downloadCanvas(canvas, name);
+        canvas.title = `Click to download ${name}`;
+
+        wrapper.appendChild(canvas);
+        wrapper.appendChild(label);
+        container.appendChild(wrapper);
+      });
+    }
+
+    // Generate on load
+    window.onload = generateAll;
+  </script>
+</body>
+</html>
