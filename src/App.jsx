@@ -81,7 +81,7 @@ export default function App() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: colors.bgLight,
+      background: colors.bgSolid,
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     }}>
       <Header user={user} onLogout={signOut} />

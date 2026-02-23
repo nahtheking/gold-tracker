@@ -28,6 +28,7 @@ export const colors = {
   // Background
   bgGradient: 'linear-gradient(135deg, #F5C842 0%, #E6B730 100%)',
   bgLight: 'linear-gradient(to bottom, #f7fafc 0%, #edf2f7 100%)',
+  bgSolid: '#f3f4f6',
 
   // Shadows
   shadowPrimary: '0 4px 12px rgba(245, 200, 66, 0.3)',

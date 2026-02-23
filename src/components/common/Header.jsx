@@ -5,83 +5,114 @@ import { useIsMobile } from '../../hooks/useIsMobile';
 export const Header = ({ user, onLogout }) => {
   const isMobile = useIsMobile();
 
+  // Get user initial for avatar
+  const userInitial = user.email ? user.email.charAt(0).toUpperCase() : 'U';
+
   return (
     <div style={{
-      background: colors.bgGradient,
-      padding: isMobile ? '16px' : '24px',
-      boxShadow: colors.shadowHeavy
+      background: colors.bgLight,
+      paddingTop: isMobile ? '12px' : '24px',
+      paddingBottom: isMobile ? '12px' : '0'
     }}>
       <div style={{
         maxWidth: '1200px',
-        margin: '0 auto',
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'stretch' : 'center',
-        gap: isMobile ? '12px' : '0'
+        margin: isMobile ? '0 12px 12px' : '0 auto 24px',
+        padding: '0 24px'
       }}>
         <div style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: isMobile ? '12px 16px' : '12px 20px',
           display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          gap: '12px',
-          justifyContent: isMobile ? 'space-between' : 'flex-start'
+          boxShadow: '0 2px 16px rgba(0,0,0,0.08)',
+          border: '0.5px solid rgba(0,0,0,0.04)',
+          gap: '12px'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ fontSize: isMobile ? '28px' : '32px' }}>💰</div>
-            <h1 style={{
-              color: 'white',
-              fontSize: isMobile ? '20px' : '24px',
-              fontWeight: '700',
-              margin: 0
+          {/* Logo */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <div style={{
+              width: '36px',
+              height: '36px',
+              background: 'linear-gradient(135deg, #F5C842 0%, #E6B730 100%)',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '20px',
+              boxShadow: '0 2px 8px rgba(245, 200, 66, 0.3)'
             }}>
-              Quản Lý Vàng
-            </h1>
+              💰
+            </div>
+            {!isMobile && (
+              <span style={{
+                fontSize: '18px',
+                fontWeight: '600',
+                color: colors.primaryText,
+                letterSpacing: '-0.3px'
+              }}>
+                Quản Lý Vàng
+              </span>
+            )}
           </div>
 
-          {isMobile && (
+          {/* User Section */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            {!isMobile && (
+              <div style={{ textAlign: 'right' }}>
+                <div style={{
+                  fontSize: '13px',
+                  color: colors.gray500,
+                  fontWeight: '500'
+                }}>
+                  {user.email}
+                </div>
+              </div>
+            )}
+            <div style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #F5C842 0%, #E6B730 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '15px',
+              fontWeight: '600',
+              color: 'white'
+            }}>
+              {userInitial}
+            </div>
             <button
               onClick={onLogout}
               style={{
-                padding: '8px 12px',
-                background: 'rgba(255,255,255,0.2)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: '8px',
-                color: 'white',
-                cursor: 'pointer',
+                padding: isMobile ? '8px 12px' : '8px 16px',
+                background: colors.bgLight,
+                border: 'none',
+                borderRadius: '10px',
+                color: colors.primaryText,
                 fontSize: '13px',
-                fontWeight: '600',
-                backdropFilter: 'blur(10px)',
+                fontWeight: '500',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
                 whiteSpace: 'nowrap'
               }}
-            >
-              Đăng xuất
-            </button>
-          )}
-        </div>
-
-        {!isMobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px' }}>
-              {user.email}
-            </span>
-            <button
-              onClick={onLogout}
-              style={{
-                padding: '8px 16px',
-                background: 'rgba(255,255,255,0.2)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: '8px',
-                color: 'white',
-                cursor: 'pointer',
-                fontSize: '14px',
-                fontWeight: '600',
-                backdropFilter: 'blur(10px)'
-              }}
+              onMouseOver={(e) => e.target.style.background = colors.gray200}
+              onMouseOut={(e) => e.target.style.background = colors.bgLight}
             >
               Đăng xuất
             </button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
