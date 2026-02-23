@@ -3,6 +3,7 @@ import { useAuth } from './hooks/useAuth';
 import { useTransactions } from './hooks/useTransactions';
 import { useStorePrices } from './hooks/useStorePrices';
 import { useToast } from './hooks/useToast';
+import { useIsMobile } from './hooks/useIsMobile';
 import { calculateSummary } from './utils/calculations';
 import { colors } from './constants/colors';
 
@@ -29,6 +30,7 @@ export default function App() {
   const { transactions, addTransaction, deleteTransaction } = useTransactions(user);
   const { stores, goldTypes, storePrices, updatePrice } = useStorePrices();
   const toast = useToast();
+  const isMobile = useIsMobile();
 
   // Loading state
   if (loading) {
@@ -82,7 +84,11 @@ export default function App() {
       <Header user={user} onLogout={signOut} />
       <Navigation currentView={view} onViewChange={setView} />
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: isMobile ? '16px' : '32px 24px'
+      }}>
         {view === 'dashboard' && <Dashboard summary={summary} />}
 
         {view === 'transactions' && (

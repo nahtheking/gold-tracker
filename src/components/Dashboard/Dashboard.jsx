@@ -1,27 +1,29 @@
 import React from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency } from '../../utils/calculations';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 export const Dashboard = ({ summary }) => {
+  const isMobile = useIsMobile();
   return (
     <div>
       {/* Summary Cards */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-        gap: '20px',
-        marginBottom: '32px'
+        gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: isMobile ? '12px' : '20px',
+        marginBottom: isMobile ? '20px' : '32px'
       }}>
         <div style={{
           background: 'white',
           borderRadius: '16px',
-          padding: '24px',
+          padding: isMobile ? '16px' : '24px',
           boxShadow: colors.shadowDefault
         }}>
           <div style={{ fontSize: '14px', color: colors.gray500, fontWeight: '600', marginBottom: '8px' }}>
             TỔNG VỐN ĐẦU TƯ
           </div>
-          <div style={{ fontSize: '32px', fontWeight: '700', color: colors.gray700 }}>
+          <div style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '700', color: colors.gray700 }}>
             {formatCurrency(summary.totalInvestment)}
           </div>
         </div>
@@ -29,13 +31,13 @@ export const Dashboard = ({ summary }) => {
         <div style={{
           background: 'white',
           borderRadius: '16px',
-          padding: '24px',
+          padding: isMobile ? '16px' : '24px',
           boxShadow: colors.shadowDefault
         }}>
           <div style={{ fontSize: '14px', color: colors.gray500, fontWeight: '600', marginBottom: '8px' }}>
             GIÁ TRỊ HIỆN TẠI
           </div>
-          <div style={{ fontSize: '32px', fontWeight: '700', color: colors.gray700 }}>
+          <div style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '700', color: colors.gray700 }}>
             {formatCurrency(summary.currentValue)}
           </div>
         </div>
@@ -45,13 +47,13 @@ export const Dashboard = ({ summary }) => {
             ? `linear-gradient(135deg, ${colors.success} 0%, ${colors.successDark} 100%)`
             : `linear-gradient(135deg, ${colors.error} 0%, ${colors.errorDark} 100%)`,
           borderRadius: '16px',
-          padding: '24px',
+          padding: isMobile ? '16px' : '24px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
         }}>
           <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', fontWeight: '600', marginBottom: '8px' }}>
             LÃI/LỖ
           </div>
-          <div style={{ fontSize: '32px', fontWeight: '700', color: 'white' }}>
+          <div style={{ fontSize: isMobile ? '24px' : '32px', fontWeight: '700', color: 'white' }}>
             {summary.profitLoss >= 0 ? '+' : ''}{formatCurrency(summary.profitLoss)}
           </div>
           <div style={{ fontSize: '16px', color: 'rgba(255,255,255,0.9)', marginTop: '4px' }}>
@@ -64,7 +66,7 @@ export const Dashboard = ({ summary }) => {
       <div style={{
         background: 'white',
         borderRadius: '16px',
-        padding: '24px',
+        padding: isMobile ? '16px' : '24px',
         boxShadow: colors.shadowDefault
       }}>
         <h2 style={{ fontSize: '20px', fontWeight: '700', color: colors.gray700, marginBottom: '20px' }}>
