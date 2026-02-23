@@ -4,6 +4,7 @@ import { formatCurrency } from '../../utils/calculations';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { GoldChart } from './GoldChart';
 import { GoldDistributionChart } from './GoldDistributionChart';
+import { EyeIcon } from '../common/EyeIcon';
 
 export const Dashboard = ({ summary, transactions }) => {
   const isMobile = useIsMobile();
@@ -64,15 +65,17 @@ export const Dashboard = ({ summary, transactions }) => {
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '20px',
               padding: '4px',
               opacity: 0.6,
-              transition: 'opacity 0.2s'
+              transition: 'opacity 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            onMouseOver={(e) => e.target.style.opacity = '1'}
-            onMouseOut={(e) => e.target.style.opacity = '0.6'}
+            onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseOut={(e) => e.currentTarget.style.opacity = '0.6'}
           >
-            {hiddenCards.investment ? '👁️‍🗨️' : '👁️'}
+            <EyeIcon visible={!hiddenCards.investment} color={colors.gray500} size={20} />
           </button>
           <div style={{ fontSize: '14px', color: colors.gray500, fontWeight: '600', marginBottom: '8px' }}>
             TỔNG VỐN ĐẦU TƯ
@@ -98,15 +101,17 @@ export const Dashboard = ({ summary, transactions }) => {
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '20px',
               padding: '4px',
               opacity: 0.6,
-              transition: 'opacity 0.2s'
+              transition: 'opacity 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            onMouseOver={(e) => e.target.style.opacity = '1'}
-            onMouseOut={(e) => e.target.style.opacity = '0.6'}
+            onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseOut={(e) => e.currentTarget.style.opacity = '0.6'}
           >
-            {hiddenCards.currentValue ? '👁️‍🗨️' : '👁️'}
+            <EyeIcon visible={!hiddenCards.currentValue} color={colors.gray500} size={20} />
           </button>
           <div style={{ fontSize: '14px', color: colors.gray500, fontWeight: '600', marginBottom: '8px' }}>
             GIÁ TRỊ HIỆN TẠI
@@ -134,16 +139,17 @@ export const Dashboard = ({ summary, transactions }) => {
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '20px',
               padding: '4px',
-              opacity: 0.8,
+              opacity: 0.9,
               transition: 'opacity 0.2s',
-              filter: 'brightness(2)'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            onMouseOver={(e) => e.target.style.opacity = '1'}
-            onMouseOut={(e) => e.target.style.opacity = '0.8'}
+            onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseOut={(e) => e.currentTarget.style.opacity = '0.9'}
           >
-            {hiddenCards.profitLoss ? '👁️‍🗨️' : '👁️'}
+            <EyeIcon visible={!hiddenCards.profitLoss} color="white" size={20} />
           </button>
           <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.9)', fontWeight: '600', marginBottom: '8px' }}>
             LÃI/LỖ
@@ -176,15 +182,17 @@ export const Dashboard = ({ summary, transactions }) => {
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '20px',
               padding: '4px',
               opacity: 0.6,
-              transition: 'opacity 0.2s'
+              transition: 'opacity 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
-            onMouseOver={(e) => e.target.style.opacity = '1'}
-            onMouseOut={(e) => e.target.style.opacity = '0.6'}
+            onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+            onMouseOut={(e) => e.currentTarget.style.opacity = '0.6'}
           >
-            {hiddenCards.holdings ? '👁️‍🗨️' : '👁️'}
+            <EyeIcon visible={!hiddenCards.holdings} color={colors.gray500} size={20} />
           </button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
