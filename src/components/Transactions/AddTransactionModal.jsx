@@ -1,17 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency } from '../../utils/calculations';
 
-export const AddTransactionModal = ({ user, stores, goldTypes, onSave, onClose, toast }) => {
+export const AddTransactionModal = ({ user, stores, goldTypes, storePrices, onSave, onClose, toast }) => {
+  // Find default IDs - try multiple name variations
+  const defaultStore = stores.find(s => s.name === 'Kim Bé' || s.name === 'Kim Be');
+  const defaultGoldType = goldTypes.find(gt =>
+    gt.name === 'Nhẫn Tròn 24K' ||
+    gt.name === 'Nhẫn tròn 24K' ||
+    gt.name === 'Nhan Tron 24K' ||
+    gt.name.includes('Nhẫn') && gt.name.includes('24K')
+  ) || goldTypes[0]; // Fallback to first gold type if not found
+
+  console.log('Available goldTypes:', goldTypes.map(gt => gt.name));
+  console.log('Selected defaultGoldType:', defaultGoldType);
+
   const [form, setForm] = useState({
     type: 'buy',
-    storeId: '',
-    goldTypeId: '',
-    quantity: '',
+    storeId: defaultStore?.id || (stores[0]?.id || ''),
+    goldTypeId: defaultGoldType?.id || (goldTypes[0]?.id || ''),
+    quantity: '1',
     pricePerUnit: '',
     notes: '',
     date: new Date().toISOString().split('T')[0]
   });
+
+  // Auto-fill price when store or gold type changes
+  useEffect(() => {
+    if (form.storeId && form.goldTypeId) {
+      const price = storePrices.find(
+        p => p.store_id === form.storeId && p.gold_type_id === form.goldTypeId
+      );
+      if (price) {
+        setForm(prev => ({
+          ...prev,
+          pricePerUnit: price.sell_price.toString()
+        }));
+      }
+    }
+  }, [form.storeId, form.goldTypeId, storePrices]);
+
+  // Format number with dots (like Vietnamese format)
+  const formatNumberInput = (value) => {
+    if (!value) return '';
+    // Remove all non-digits
+    const number = value.replace(/\D/g, '');
+    // Add dots for thousands separator
+    return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
+  // Handle price input with formatting
+  const handlePriceChange = (e) => {
+    const rawValue = e.target.value;
+    const numberOnly = rawValue.replace(/\D/g, '');
+    setForm({ ...form, pricePerUnit: numberOnly });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -158,12 +201,12 @@ export const AddTransactionModal = ({ user, stores, goldTypes, onSave, onClose, 
               Giá mỗi đơn vị (VND) *
             </label>
             <input
-              type="number"
-              step="1000"
-              value={form.pricePerUnit}
-              onChange={(e) => setForm({ ...form, pricePerUnit: e.target.value })}
+              type="text"
+              inputMode="numeric"
+              value={formatNumberInput(form.pricePerUnit)}
+              onChange={handlePriceChange}
               required
-              placeholder="Ví dụ: 18110000"
+              placeholder="Ví dụ: 18.110.000"
               style={{
                 width: '100%',
                 padding: '12px',
@@ -190,7 +233,12 @@ export const AddTransactionModal = ({ user, stores, goldTypes, onSave, onClose, 
                 fontSize: '15px',
                 border: `2px solid ${colors.gray200}`,
                 borderRadius: '8px',
-                outline: 'none'
+                outline: 'none',
+                boxSizing: 'border-box',
+                WebkitAppearance: 'none',
+                MozAppearance: 'none',
+                appearance: 'none',
+                fontFamily: 'inherit'
               }}
             />
           </div>

@@ -113,6 +113,7 @@ export default function App() {
           user={user}
           stores={stores}
           goldTypes={goldTypes}
+          storePrices={storePrices}
           onSave={addTransaction}
           onClose={() => setShowAddTransaction(false)}
           toast={toast}
