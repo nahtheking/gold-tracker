@@ -17,7 +17,7 @@ export const Header = ({ user, onLogout }) => {
       <div style={{
         maxWidth: '1200px',
         margin: isMobile ? '0 12px 12px' : '0 auto 24px',
-        padding: '0 24px'
+        padding: isMobile ? '0' : '0 24px'
       }}>
         <div style={{
           background: 'white',
@@ -49,16 +49,14 @@ export const Header = ({ user, onLogout }) => {
             }}>
               💰
             </div>
-            {!isMobile && (
-              <span style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: colors.primaryText,
-                letterSpacing: '-0.3px'
-              }}>
-                Quản Lý Vàng
-              </span>
-            )}
+            <span style={{
+              fontSize: isMobile ? '16px' : '18px',
+              fontWeight: '600',
+              color: colors.primaryText,
+              letterSpacing: '-0.3px'
+            }}>
+              Quản Lý Vàng
+            </span>
           </div>
 
           {/* User Section */}
