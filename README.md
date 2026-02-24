@@ -18,19 +18,23 @@ A modern web application for tracking gold investments with real-time profit/los
 ## 📸 Screenshots
 
 ### Login Screen
-![Login Screen](screenshots/login.png)
+<img src="screenshots/login.png" alt="Login Screen" width="600">
+
 *Login with account or browse as guest - no registration needed to view gold prices*
 
 ### Dashboard
-![Dashboard](screenshots/dashboard.png)
+<img src="screenshots/dashboard.png" alt="Dashboard" width="600">
+
 *Investment overview with trend charts and detailed analytics*
 
 ### Transaction Management
-![Transactions](screenshots/transactions.png)
+<img src="screenshots/transactions.png" alt="Transactions" width="600">
+
 *Track, add, and edit buy/sell gold transactions*
 
 ### Gold Price List
-![Gold Prices](screenshots/prices.png)
+<img src="screenshots/prices.png" alt="Gold Prices" width="600">
+
 *View gold prices grouped by store with real-time updates*
 
 ## 🛠️ Tech Stack
