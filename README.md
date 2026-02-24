@@ -8,10 +8,30 @@ A modern web application for tracking gold investments with real-time profit/los
 - 📈 **Charts**: Interactive line chart showing gold quantity trends over time
 - 📝 **Transaction Management**: Track buy/sell transactions with smart defaults
 - 💵 **Price Updates**: Store-specific gold pricing from different shops
+- 👁️ **Guest Mode**: View gold prices without registration
+- 🔒 **Permission Control**: Role-based price update access
 - 📱 **PWA Support**: Install as app on iOS/Android home screen
 - 🎨 **Modern UI**: Gold-themed, responsive interface optimized for mobile
 - 🔔 **Toast Notifications**: User-friendly success/error messages
 - 👥 **Multi-user Support**: Share with family members
+
+## 📸 Screenshots
+
+### Login Screen
+![Login Screen](screenshots/login.png)
+*Login with account or browse as guest - no registration needed to view gold prices*
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+*Investment overview with trend charts and detailed analytics*
+
+### Transaction Management
+![Transactions](screenshots/transactions.png)
+*Track, add, and edit buy/sell gold transactions*
+
+### Gold Price List
+![Gold Prices](screenshots/prices.png)
+*View gold prices grouped by store with real-time updates*
 
 ## 🛠️ Tech Stack
 
