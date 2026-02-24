@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { colors } from '../../constants/colors';
 
 export const UpdatePriceModal = ({ user, stores, goldTypes, onSave, onClose, toast }) => {
@@ -8,6 +8,36 @@ export const UpdatePriceModal = ({ user, stores, goldTypes, onSave, onClose, toa
     buyPrice: '',
     sellPrice: ''
   });
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
+  // Format number with dots (like Vietnamese format)
+  const formatNumberInput = (value) => {
+    if (!value) return '';
+    // Remove all non-digits
+    const number = value.replace(/\D/g, '');
+    // Add dots for thousands separator
+    return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
+  // Handle price input with formatting
+  const handleBuyPriceChange = (e) => {
+    const rawValue = e.target.value;
+    const numberOnly = rawValue.replace(/\D/g, '');
+    setForm({ ...form, buyPrice: numberOnly });
+  };
+
+  const handleSellPriceChange = (e) => {
+    const rawValue = e.target.value;
+    const numberOnly = rawValue.replace(/\D/g, '');
+    setForm({ ...form, sellPrice: numberOnly });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,27 +57,70 @@ export const UpdatePriceModal = ({ user, stores, goldTypes, onSave, onClose, toa
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '20px'
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '16px',
-        padding: '32px',
-        maxWidth: '500px',
-        width: '100%'
-      }}>
-        <h3 style={{ fontSize: '24px', fontWeight: '700', color: colors.gray700, marginBottom: '24px' }}>
+    <div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: 'rgba(0,0,0,0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '20px',
+        overflowY: 'auto'
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: 'white',
+          borderRadius: '16px',
+          padding: '32px',
+          maxWidth: '500px',
+          width: '100%',
+          position: 'relative'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            background: colors.gray200,
+            border: 'none',
+            color: colors.gray600,
+            fontSize: '20px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: '700',
+            lineHeight: '1',
+            transition: 'all 0.2s',
+            zIndex: 10
+          }}
+          onMouseOver={(e) => {
+            e.target.style.background = colors.gray400;
+            e.target.style.color = 'white';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.background = colors.gray200;
+            e.target.style.color = colors.gray600;
+          }}
+        >
+          ×
+        </button>
+
+        <h3 style={{ fontSize: '24px', fontWeight: '700', color: colors.gray700, marginBottom: '24px', paddingRight: '40px' }}>
           Cập nhật giá vàng
         </h3>
 
@@ -105,12 +178,12 @@ export const UpdatePriceModal = ({ user, stores, goldTypes, onSave, onClose, toa
               Giá mua (VND) *
             </label>
             <input
-              type="number"
-              step="1000"
-              value={form.buyPrice}
-              onChange={(e) => setForm({ ...form, buyPrice: e.target.value })}
+              type="text"
+              inputMode="numeric"
+              value={formatNumberInput(form.buyPrice)}
+              onChange={handleBuyPriceChange}
               required
-              placeholder="Ví dụ: 18110000"
+              placeholder="Ví dụ: 18.110.000"
               style={{
                 width: '100%',
                 padding: '12px',
@@ -127,12 +200,12 @@ export const UpdatePriceModal = ({ user, stores, goldTypes, onSave, onClose, toa
               Giá bán (VND) *
             </label>
             <input
-              type="number"
-              step="1000"
-              value={form.sellPrice}
-              onChange={(e) => setForm({ ...form, sellPrice: e.target.value })}
+              type="text"
+              inputMode="numeric"
+              value={formatNumberInput(form.sellPrice)}
+              onChange={handleSellPriceChange}
               required
-              placeholder="Ví dụ: 18410000"
+              placeholder="Ví dụ: 18.410.000"
               style={{
                 width: '100%',
                 padding: '12px',

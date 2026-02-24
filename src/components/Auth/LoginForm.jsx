@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { colors } from '../../constants/colors';
 
-export const LoginForm = ({ onSignIn, onSignUp, toast }) => {
+export const LoginForm = ({ onSignIn, onSignUp, onSignInAsGuest, toast }) => {
   const [authMode, setAuthMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -139,6 +139,48 @@ export const LoginForm = ({ onSignIn, onSignUp, toast }) => {
           >
             {authMode === 'login' ? 'Chưa có tài khoản? Đăng ký' : 'Đã có tài khoản? Đăng nhập'}
           </button>
+        </div>
+
+        {/* Guest Login */}
+        <div style={{
+          marginTop: '24px',
+          paddingTop: '24px',
+          borderTop: `1px solid ${colors.gray200}`
+        }}>
+          <button
+            onClick={onSignInAsGuest}
+            style={{
+              width: '100%',
+              padding: '14px',
+              fontSize: '15px',
+              fontWeight: '600',
+              color: colors.gray600,
+              background: colors.gray100,
+              border: `2px solid ${colors.gray200}`,
+              borderRadius: '12px',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = colors.gray200;
+              e.target.style.borderColor = colors.gray300;
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = colors.gray100;
+              e.target.style.borderColor = colors.gray200;
+            }}
+          >
+            👁️ Xem với tư cách khách
+          </button>
+          <p style={{
+            fontSize: '13px',
+            color: colors.gray500,
+            textAlign: 'center',
+            marginTop: '12px',
+            marginBottom: 0
+          }}>
+            Chỉ xem bảng giá vàng, không cần đăng ký
+          </p>
         </div>
 
         {/* Signature */}

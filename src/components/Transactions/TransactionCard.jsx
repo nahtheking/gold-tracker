@@ -2,7 +2,7 @@ import React from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency, formatDate } from '../../utils/calculations';
 
-export const TransactionCard = ({ transaction, onDelete }) => {
+export const TransactionCard = ({ transaction, onDelete, onEdit }) => {
   const t = transaction;
 
   return (
@@ -14,6 +14,36 @@ export const TransactionCard = ({ transaction, onDelete }) => {
       marginBottom: '12px',
       position: 'relative'
     }}>
+      {/* Edit button - overlapping edge */}
+      <button
+        onClick={() => onEdit(t)}
+        style={{
+          position: 'absolute',
+          top: '-10px',
+          right: '24px',
+          width: '28px',
+          height: '28px',
+          borderRadius: '50%',
+          background: colors.primary,
+          border: '2px solid white',
+          color: 'white',
+          fontSize: '14px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: '700',
+          lineHeight: '1',
+          boxShadow: colors.shadowDefault,
+          transition: 'all 0.2s',
+          zIndex: 10
+        }}
+        onMouseOver={(e) => e.target.style.transform = 'scale(1.1)'}
+        onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+      >
+        ✎
+      </button>
+
       {/* Delete button - overlapping edge */}
       <button
         onClick={() => onDelete(t.id)}

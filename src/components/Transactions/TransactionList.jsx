@@ -4,7 +4,7 @@ import { formatCurrency, formatDate } from '../../utils/calculations';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { TransactionCard } from './TransactionCard';
 
-export const TransactionList = ({ transactions, onDelete, onAddClick }) => {
+export const TransactionList = ({ transactions, onDelete, onEdit, onAddClick }) => {
   const isMobile = useIsMobile();
   return (
     <div>
@@ -47,7 +47,7 @@ export const TransactionList = ({ transactions, onDelete, onAddClick }) => {
         // Mobile: Card Layout
         <div>
           {transactions.map((t) => (
-            <TransactionCard key={t.id} transaction={t} onDelete={onDelete} />
+            <TransactionCard key={t.id} transaction={t} onDelete={onDelete} onEdit={onEdit} />
           ))}
         </div>
       ) : (
@@ -106,21 +106,38 @@ export const TransactionList = ({ transactions, onDelete, onAddClick }) => {
                       {formatCurrency(t.total_amount)}
                     </td>
                     <td style={{ padding: '16px', textAlign: 'center' }}>
-                      <button
-                        onClick={() => onDelete(t.id)}
-                        style={{
-                          padding: '6px 12px',
-                          background: colors.errorLight,
-                          border: 'none',
-                          borderRadius: '6px',
-                          color: colors.errorTextDark,
-                          fontSize: '13px',
-                          fontWeight: '600',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Xóa
-                      </button>
+                      <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                        <button
+                          onClick={() => onEdit(t)}
+                          style={{
+                            padding: '6px 12px',
+                            background: colors.primary,
+                            border: 'none',
+                            borderRadius: '6px',
+                            color: 'white',
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Sửa
+                        </button>
+                        <button
+                          onClick={() => onDelete(t.id)}
+                          style={{
+                            padding: '6px 12px',
+                            background: colors.errorLight,
+                            border: 'none',
+                            borderRadius: '6px',
+                            color: colors.errorTextDark,
+                            fontSize: '13px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Xóa
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

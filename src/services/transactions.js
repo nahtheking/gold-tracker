@@ -21,6 +21,16 @@ export const transactionService = {
     return data;
   },
 
+  async update(id, transaction) {
+    const { data, error } = await supabase
+      .from('transactions')
+      .update(transaction)
+      .eq('id', id);
+
+    if (error) throw error;
+    return data;
+  },
+
   async delete(id) {
     const { error } = await supabase
       .from('transactions')

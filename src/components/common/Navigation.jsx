@@ -2,14 +2,19 @@ import React from 'react';
 import { colors } from '../../constants/colors';
 import { useIsMobile } from '../../hooks/useIsMobile';
 
-export const Navigation = ({ currentView, onViewChange, loading = false }) => {
+export const Navigation = ({ currentView, onViewChange, loading = false, user }) => {
   const isMobile = useIsMobile();
 
-  const tabs = [
+  const allTabs = [
     { id: 'dashboard', label: isMobile ? '📊 Tổng quan' : 'Tổng quan', icon: '📊' },
     { id: 'transactions', label: isMobile ? '📝 Giao dịch' : 'Giao dịch', icon: '📝' },
     { id: 'prices', label: isMobile ? '💵 Giá vàng' : 'Giá vàng', icon: '💵' }
   ];
+
+  // Filter tabs based on user type (guests only see prices)
+  const tabs = user?.isGuest
+    ? allTabs.filter(tab => tab.id === 'prices')
+    : allTabs;
 
   return (
     <div style={{

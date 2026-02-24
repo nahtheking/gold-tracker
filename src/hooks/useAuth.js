@@ -17,6 +17,18 @@ export const useAuth = () => {
   }, []);
 
   const checkUser = async () => {
+    // Check if guest mode
+    const guestMode = localStorage.getItem('guestMode');
+    if (guestMode === 'true') {
+      setUser({
+        id: 'guest',
+        email: 'guest@goldtracker.app',
+        isGuest: true
+      });
+      setLoading(false);
+      return;
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
     setUser(session?.user ?? null);
     setLoading(false);
@@ -32,7 +44,18 @@ export const useAuth = () => {
     if (error) throw error;
   };
 
+  const signInAsGuest = () => {
+    localStorage.setItem('guestMode', 'true');
+    setUser({
+      id: 'guest',
+      email: 'guest@goldtracker.app',
+      isGuest: true
+    });
+  };
+
   const signOut = async () => {
+    // Clear guest mode
+    localStorage.removeItem('guestMode');
     await supabase.auth.signOut();
     setUser(null);
   };
@@ -42,6 +65,7 @@ export const useAuth = () => {
     loading,
     signUp,
     signIn,
+    signInAsGuest,
     signOut
   };
 };

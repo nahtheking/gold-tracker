@@ -2,27 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { colors } from '../../constants/colors';
 import { formatCurrency } from '../../utils/calculations';
 
-export const AddTransactionModal = ({ user, stores, goldTypes, storePrices, onSave, onClose, toast }) => {
-  // Find default IDs - try multiple name variations
-  const defaultStore = stores.find(s => s.name === 'Kim Bé' || s.name === 'Kim Be');
-  const defaultGoldType = goldTypes.find(gt =>
-    gt.name === 'Nhẫn Tròn 24K' ||
-    gt.name === 'Nhẫn tròn 24K' ||
-    gt.name === 'Nhan Tron 24K' ||
-    gt.name.includes('Nhẫn') && gt.name.includes('24K')
-  ) || goldTypes[0]; // Fallback to first gold type if not found
-
-  console.log('Available goldTypes:', goldTypes.map(gt => gt.name));
-  console.log('Selected defaultGoldType:', defaultGoldType);
-
+export const EditTransactionModal = ({ transaction, user, stores, goldTypes, storePrices, onSave, onClose, toast }) => {
   const [form, setForm] = useState({
-    type: 'buy',
-    storeId: defaultStore?.id || (stores[0]?.id || ''),
-    goldTypeId: defaultGoldType?.id || (goldTypes[0]?.id || ''),
-    quantity: '1',
-    pricePerUnit: '',
-    notes: '',
-    date: new Date().toISOString().split('T')[0]
+    type: transaction.transaction_type,
+    storeId: transaction.store_id || '',
+    goldTypeId: transaction.gold_type_id,
+    quantity: transaction.quantity.toString(),
+    pricePerUnit: transaction.price_per_unit.toString(),
+    notes: transaction.notes || '',
+    date: new Date(transaction.transaction_date).toISOString().split('T')[0]
   });
 
   // Auto-fill price when store or gold type changes
@@ -60,7 +48,7 @@ export const AddTransactionModal = ({ user, stores, goldTypes, storePrices, onSa
     e.preventDefault();
     try {
       const totalAmount = parseFloat(form.quantity) * parseFloat(form.pricePerUnit);
-      await onSave({
+      await onSave(transaction.id, {
         user_id: user.id,
         store_id: form.storeId || null,
         gold_type_id: form.goldTypeId,
@@ -71,7 +59,7 @@ export const AddTransactionModal = ({ user, stores, goldTypes, storePrices, onSa
         transaction_date: new Date(form.date).toISOString(),
         notes: form.notes
       });
-      toast.success('Thêm giao dịch thành công!');
+      toast.success('Cập nhật giao dịch thành công!');
       onClose();
     } catch (error) {
       toast.error(error.message);
@@ -153,7 +141,7 @@ export const AddTransactionModal = ({ user, stores, goldTypes, storePrices, onSa
         </button>
 
         <h3 style={{ fontSize: '24px', fontWeight: '700', color: colors.gray700, marginBottom: '24px', paddingRight: '40px' }}>
-          Thêm giao dịch mới
+          Sửa giao dịch
         </h3>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -363,7 +351,7 @@ export const AddTransactionModal = ({ user, stores, goldTypes, storePrices, onSa
                 cursor: 'pointer'
               }}
             >
-              Lưu giao dịch
+              Cập nhật
             </button>
           </div>
         </form>

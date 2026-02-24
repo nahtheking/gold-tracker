@@ -14,6 +14,7 @@ import { Navigation } from './components/common/Navigation';
 import { Dashboard } from './components/Dashboard/Dashboard';
 import { TransactionList } from './components/Transactions/TransactionList';
 import { AddTransactionModal } from './components/Transactions/AddTransactionModal';
+import { EditTransactionModal } from './components/Transactions/EditTransactionModal';
 import { PriceList } from './components/PriceList/PriceList';
 import { UpdatePriceModal } from './components/PriceList/UpdatePriceModal';
 import { ToastContainer } from './components/common/Toast';
@@ -22,12 +23,13 @@ import { ConfirmModal } from './components/common/ConfirmModal';
 export default function App() {
   const [view, setView] = useState('dashboard');
   const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [editTransaction, setEditTransaction] = useState(null);
   const [showUpdatePrice, setShowUpdatePrice] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
   // Hooks
-  const { user, loading, signUp, signIn, signOut } = useAuth();
-  const { transactions, loading: transactionsLoading, addTransaction, deleteTransaction } = useTransactions(user);
+  const { user, loading, signUp, signIn, signInAsGuest, signOut } = useAuth();
+  const { transactions, loading: transactionsLoading, addTransaction, updateTransaction, deleteTransaction } = useTransactions(user);
   const { stores, goldTypes, storePrices, loading: pricesLoading, updatePrice } = useStorePrices();
   const toast = useToast();
   const isMobile = useIsMobile();
@@ -54,16 +56,25 @@ export default function App() {
   if (!user) {
     return (
       <>
-        <LoginForm onSignIn={signIn} onSignUp={signUp} toast={toast} />
+        <LoginForm onSignIn={signIn} onSignUp={signUp} onSignInAsGuest={signInAsGuest} toast={toast} />
         <ToastContainer toasts={toast.toasts} onClose={toast.removeToast} />
       </>
     );
+  }
+
+  // Set view to 'prices' for guest users
+  if (user.isGuest && view !== 'prices') {
+    setView('prices');
   }
 
   // Calculate summary
   const summary = calculateSummary(transactions, storePrices);
 
   // Handlers
+  const handleEditTransaction = (transaction) => {
+    setEditTransaction(transaction);
+  };
+
   const handleDeleteTransaction = (id) => {
     setConfirmDelete(id);
   };
@@ -85,7 +96,7 @@ export default function App() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
     }}>
       <Header user={user} onLogout={signOut} />
-      <Navigation currentView={view} onViewChange={setView} loading={dataLoading} />
+      <Navigation currentView={view} onViewChange={setView} loading={dataLoading} user={user} />
 
       <div style={{
         maxWidth: '1200px',
@@ -98,14 +109,23 @@ export default function App() {
           <TransactionList
             transactions={transactions}
             onDelete={handleDeleteTransaction}
+            onEdit={handleEditTransaction}
             onAddClick={() => setShowAddTransaction(true)}
           />
         )}
 
         {view === 'prices' && (
           <PriceList
+            user={user}
             storePrices={storePrices}
-            onUpdateClick={() => setShowUpdatePrice(true)}
+            onUpdateClick={() => {
+              // Only allow ducanhh@gmail.com to update prices
+              if (user.email === 'ducanhh@gmail.com') {
+                setShowUpdatePrice(true);
+              } else {
+                toast.error('Bạn không có quyền cập nhật giá vàng');
+              }
+            }}
           />
         )}
       </div>
@@ -119,6 +139,19 @@ export default function App() {
           storePrices={storePrices}
           onSave={addTransaction}
           onClose={() => setShowAddTransaction(false)}
+          toast={toast}
+        />
+      )}
+
+      {editTransaction && (
+        <EditTransactionModal
+          transaction={editTransaction}
+          user={user}
+          stores={stores}
+          goldTypes={goldTypes}
+          storePrices={storePrices}
+          onSave={updateTransaction}
+          onClose={() => setEditTransaction(null)}
           toast={toast}
         />
       )}

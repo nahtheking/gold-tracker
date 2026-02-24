@@ -6,8 +6,12 @@ export const useTransactions = (user) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && !user.isGuest) {
       loadTransactions();
+    } else if (user?.isGuest) {
+      // Guest users have no transactions
+      setTransactions([]);
+      setLoading(false);
     }
   }, [user]);
 
@@ -28,6 +32,11 @@ export const useTransactions = (user) => {
     await loadTransactions();
   };
 
+  const updateTransaction = async (id, transactionData) => {
+    await transactionService.update(id, transactionData);
+    await loadTransactions();
+  };
+
   const deleteTransaction = async (id) => {
     await transactionService.delete(id);
     await loadTransactions();
@@ -37,6 +46,7 @@ export const useTransactions = (user) => {
     transactions,
     loading,
     addTransaction,
+    updateTransaction,
     deleteTransaction,
     refresh: loadTransactions
   };
