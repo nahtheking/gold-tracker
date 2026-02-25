@@ -15,6 +15,8 @@ A modern web application for tracking gold investments with real-time profit/los
 - 🔔 **Toast Notifications**: User-friendly success/error messages
 - 👥 **Multi-user Support**: Share with family members
 
+Demo here : https://goldtrackerprice.netlify.app/
+
 ## 📸 Screenshots
 
 ### Login Screen
