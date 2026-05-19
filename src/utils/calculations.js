@@ -3,7 +3,12 @@ export const calculateSummary = (transactions, storePrices) => {
   let totalSellAmount = 0;
   const holdings = {}; // Key: store_id + gold_type_id
 
-  transactions.forEach(t => {
+  // Sort ascending so buys are processed before sells for correct cost basis
+  const sorted = [...transactions].sort(
+    (a, b) => new Date(a.transaction_date) - new Date(b.transaction_date)
+  );
+
+  sorted.forEach(t => {
     // Create unique key combining store and gold type
     const key = `${t.store_id || 'no-store'}_${t.gold_type_id}`;
 
@@ -24,8 +29,12 @@ export const calculateSummary = (transactions, storePrices) => {
       holdings[key].investedAmount += t.total_amount;
       totalBuyAmount += t.total_amount;
     } else {
+      // Reduce cost basis proportionally (not by sell revenue)
+      const costPerUnit = holdings[key].quantity > 0
+        ? holdings[key].investedAmount / holdings[key].quantity
+        : 0;
       holdings[key].quantity -= t.quantity;
-      holdings[key].investedAmount -= t.total_amount;
+      holdings[key].investedAmount -= costPerUnit * t.quantity;
       totalSellAmount += t.total_amount;
     }
   });
@@ -63,8 +72,15 @@ export const calculateSummary = (transactions, storePrices) => {
   });
 
   const netInvestment = totalBuyAmount - totalSellAmount;
-  const profitLoss = totalCurrentValue - netInvestment;
-  const profitLossPercent = netInvestment > 0 ? (profitLoss / netInvestment) * 100 : 0;
+
+  // P&L based on remaining cost basis (not net cash), so selling reduces P&L correctly
+  let totalRemainingCost = 0;
+  Object.values(holdings).forEach(h => {
+    if (h.quantity > 0) totalRemainingCost += h.investedAmount;
+  });
+
+  const profitLoss = totalCurrentValue - totalRemainingCost;
+  const profitLossPercent = totalRemainingCost > 0 ? (profitLoss / totalRemainingCost) * 100 : 0;
 
   return {
     holdings: Object.values(holdingsByGoldType),
